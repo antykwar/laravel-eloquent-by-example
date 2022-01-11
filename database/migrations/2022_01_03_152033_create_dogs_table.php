@@ -20,6 +20,7 @@ class CreateDogsTable extends Migration
                 ->unsigned()
                 ->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

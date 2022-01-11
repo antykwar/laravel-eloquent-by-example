@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Dog;
+use App\Models\Dog\DogWithAInName;
 use App\Transformers\DogTransformer;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,25 @@ Route::get('/dogs/old_dogs', function () {
     );
 });
 
+Route::get('/dogs/using_global_scope', function () {
+    return response()->json(
+        DogWithAInName::all()
+    );
+});
+
+Route::get('/dogs/without_global_scope', function () {
+    return response()->json(
+        DogWithAInName::withoutGlobalScope('nameFilter')->get()
+    );
+});
+
+Route::get('/dogs/soft_deleted', function () {
+    Dog::find(4)?->delete();
+    return response()->json(
+        Dog::onlyTrashed()->find(4)
+    );
+});
+
 Route::get('/dogs/{minAge}', function ($minAge) {
     return response()->json(
         Dog::ageGreaterThan((int)$minAge)
@@ -42,3 +62,4 @@ Route::get('/dogs/{minAge}', function ($minAge) {
             ->transformWith(new DogTransformer())
     );
 });
+
