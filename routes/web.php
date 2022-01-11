@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Dog;
+use App\Transformers\DogTransformer;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +17,28 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/dogs', function () {
+    return response()
+        ->json(
+            Dog::all()
+                ->transformWith(new DogTransformer())
+        );
+});
+
+Route::get('/dogs/old_dogs', function () {
+    return response()->json(
+        (new Dog)->oldDogsList()
+            ->get()
+            ->transformWith(new DogTransformer())
+    );
+});
+
+Route::get('/dogs/{minAge}', function ($minAge) {
+    return response()->json(
+        Dog::ageGreaterThan((int)$minAge)
+            ->get()
+            ->transformWith(new DogTransformer())
+    );
 });
