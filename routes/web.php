@@ -3,6 +3,7 @@
 use App\Models\Dog;
 use App\Models\Dog\DogWithAInName;
 use App\Transformers\DogTransformer;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,6 +53,37 @@ Route::get('/dogs/soft_deleted', function () {
     Dog::find(4)?->delete();
     return response()->json(
         Dog::onlyTrashed()->find(4)
+    );
+});
+
+Route::get('/dogs/accessor', function () {
+    return response()->json(
+        [
+            Dog::find(1)->name,
+            Dog::find(1)->getAttributes()['name'],
+            Dog::find(1)->idName
+        ]
+    );
+});
+
+Route::get('/dogs/carbon_date', function () {
+    return response()->json(
+        Carbon::now()->diffInHours(Dog::find(1)->created_at)
+    );
+});
+
+Route::get('/dogs/mutator', function () {
+    $dog = Dog::find(1);
+    $originalName = $dog->name;
+    $dog->name = $originalName;
+    $dog->save();
+    $newName = Dog::find(1)->name;
+
+    return response()->json(
+        [
+            $originalName,
+            $newName
+        ]
     );
 });
 
