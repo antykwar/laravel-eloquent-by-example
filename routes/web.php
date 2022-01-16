@@ -96,3 +96,17 @@ Route::get('/dogs/{minAge}', function ($minAge) {
     );
 });
 
+Route::get('/dogs_age_groups/{ageGroup}', function ($ageGroup) {
+    return response()->json(
+        Dog::select('name', 'age')->when(
+            $ageGroup === 'old',
+            function($query) {
+                $query->where('age', '>', '8');
+            },
+            function($query) {
+                $query->where('age', '<', '6');
+            }
+        )->get()
+    );
+});
+
