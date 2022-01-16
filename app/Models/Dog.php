@@ -22,19 +22,4 @@ class Dog extends Model
     {
         return $query->where('age', '>', $age);
     }
-
-    public function getNameAttribute($value)
-    {
-        return strtoupper($value);
-    }
-
-    public function setNameAttribute($name)
-    {
-        $this->attributes['name'] = $name . '_' . random_int(1,100);
-    }
-
-    public function getIdNameAttribute()
-    {
-        return $this->attributes['id'] . ':' . $this->attributes['name'];
-    }
 }
