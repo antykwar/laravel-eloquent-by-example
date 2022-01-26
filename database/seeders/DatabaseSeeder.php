@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Cat;
 use App\Models\Dog;
 use Illuminate\Database\Seeder;
 
@@ -15,10 +16,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Dog::truncate();
+        Cat::truncate();
 
         $this->call([
             DogsTableSeeder::class,
             DogsTableExactDataSeeder::class,
+            CatsTableSeeder::class,
         ]);
     }
 }
