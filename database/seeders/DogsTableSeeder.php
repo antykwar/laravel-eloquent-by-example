@@ -15,7 +15,7 @@ class DogsTableSeeder extends Seeder
     public function run()
     {
         Dog::factory()
-            ->count(5)
+            ->count(10)
             ->create();
     }
 }

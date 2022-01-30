@@ -4,9 +4,11 @@ use App\Models\Cat;
 use App\Models\Dog;
 use App\Models\Dog\DogAccessors;
 use App\Models\Dog\DogWithAInName;
+use App\Models\User;
 use App\Transformers\DogTransformer;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +31,49 @@ Route::get('/dogs', function () {
             Dog::all()
                 ->transformWith(new DogTransformer())
         );
+});
+
+Route::prefix('queries')->group(function() {
+    Route::get('/listener', function() {
+        DB::listen(function($event) {
+            dump($event->sql);
+            dump($event->bindings);
+        });
+
+        Dog::find(1);
+    });
+
+    Route::get('/users_with_dogs_not_clean_way', function() {
+        return response()->json(
+            User::join('dogs', 'user_id', '=', 'users.id')
+                ->get()
+                ->pluck('email')
+                ->unique()
+        );
+    });
+
+    Route::get('/users_with_dogs_clean_way', function() {
+        return response()->json(
+            User::has('dogs')
+                ->get()
+                ->pluck('email')
+        );
+    });
+
+    Route::get('/users_with_dogs_count', function() {
+        return response()->json(
+            User::withCount('dogs')
+                ->get()
+        );
+    });
+
+    Route::get('/users_with_dogs_count_condition', function() {
+        return response()->json(
+            User::withCount(['dogs' => function($query) {
+                $query->where('name','like', 'M%');
+            }])->get()
+        );
+    });
 });
 
 Route::prefix('cats')->group(function() {

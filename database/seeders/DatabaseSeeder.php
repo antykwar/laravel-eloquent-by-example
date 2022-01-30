@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             DogsTableSeeder::class,
-            DogsTableExactDataSeeder::class,
+            UsersTableSeeder::class,
             CatsTableSeeder::class,
         ]);
     }

@@ -22,4 +22,9 @@ class Dog extends Model
     {
         return $query->where('age', '>', $age);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

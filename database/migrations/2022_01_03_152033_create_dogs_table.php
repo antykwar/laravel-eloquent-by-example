@@ -19,6 +19,9 @@ class CreateDogsTable extends Migration
             $table->integer('age')
                 ->unsigned()
                 ->nullable();
+            $table->foreignId('user_id')
+                ->nullable()
+                ->default(null);
             $table->timestamps();
             $table->softDeletes();
         });
